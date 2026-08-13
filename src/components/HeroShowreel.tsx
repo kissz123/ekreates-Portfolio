@@ -97,7 +97,7 @@ export const HeroShowreel: React.FC<HeroShowreelProps> = ({
           </h1>
 
           <p className="text-sm sm:text-base text-[#88888C] max-w-2xl mx-auto font-sans leading-relaxed">
-            Lead visual studio powered by <strong className="text-white">Kisira Emmanuel</strong> — Videographer, Video Editor, and Creative Director. Specializing in high-impact visual storytelling, color correction, motion graphics, and mobile shorts using Adobe Premiere Pro and CapCut Pro.
+            Ekreates.MOV studio directed by <strong className="text-white">Kisira Emmanuel</strong> — Videographer, Lead Video Editor, and Creative Director. Delivering high-retention visual storytelling, cinematic color grading, motion graphics, and mobile short-form content mastered in <span className="text-white font-medium">Adobe Premiere Pro, After Effects, Photoshop</span>, and <span className="text-white font-medium">CapCut Pro</span>.
           </p>
 
           {/* Quick CTA row */}

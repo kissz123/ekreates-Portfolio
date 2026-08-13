@@ -16,3 +16,15 @@ export function getYouTubeThumbnail(url: string): string | null {
   if (!id) return null;
   return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 }
+
+export function getGoogleDriveId(url: string): string | null {
+  if (!url) return null;
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}
+
+export function getGoogleDriveEmbedUrl(url: string): string | null {
+  const id = getGoogleDriveId(url);
+  if (!id) return null;
+  return `https://drive.google.com/file/d/${id}/preview`;
+}

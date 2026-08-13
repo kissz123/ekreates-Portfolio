@@ -4,7 +4,7 @@ import {
   Sliders, Layers, Sparkles, CheckCircle2, MessageSquare, ExternalLink, Share2, Award, Linkedin, ArrowLeft, Trash2
 } from 'lucide-react';
 import { Project } from '../types';
-import { getYouTubeId } from '../utils/videoUtils';
+import { getYouTubeId, getGoogleDriveEmbedUrl } from '../utils/videoUtils';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -23,9 +23,33 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   const [isMuted, setIsMuted] = useState(false);
   const [gradingSliderPos, setGradingSliderPos] = useState(50); // 0 to 100%
   const [activeTab, setActiveTab] = useState<'overview' | 'color' | 'timeline'>('overview');
+  const [copied, setCopied] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   if (!project) return null;
+
+  const handleCopyShareLink = async () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('project', project.id);
+    const shareUrl = url.toString();
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = shareUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch (err) {
+      console.error('Failed to copy share link:', err);
+    }
+  };
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -79,6 +103,25 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={handleCopyShareLink}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0A0A0B] hover:bg-[#1A1A1E] text-white border border-[#1F1F23] hover:border-amber-500/50 text-[10px] font-mono tracking-wider uppercase transition-all rounded shrink-0"
+              title="Copy shareable deep link & project details to clipboard"
+            >
+              {copied ? (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-emerald-400 font-bold">Link Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="hidden sm:inline">Copy Share Link</span>
+                  <span className="sm:hidden">Share</span>
+                </>
+              )}
+            </button>
+
             {onDeleteProject && (
               <button
                 onClick={() => {
@@ -118,8 +161,37 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           {/* Main Video Player */}
           {(() => {
             const ytId = getYouTubeId(project.videoUrl);
+            const gDriveEmbedUrl = getGoogleDriveEmbedUrl(project.videoUrl);
             const isVertical = project.aspectRatio === '9:16';
             const isLinkedIn = project.videoUrl.includes('linkedin.com');
+
+            if (gDriveEmbedUrl) {
+              return (
+                <div className="relative aspect-video w-full overflow-hidden bg-black border border-[#1F1F23] shadow-lg rounded-xl flex flex-col group">
+                  <iframe
+                    src={gDriveEmbedUrl}
+                    title={project.title}
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full border-0"
+                  />
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between bg-[#0A0A0B]/90 backdrop-blur-md p-2 border border-[#1F1F23] pointer-events-none">
+                    <span className="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">
+                      GOOGLE DRIVE VIDEO MASTER
+                    </span>
+                    <a
+                      href={project.videoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pointer-events-auto text-[10px] font-mono text-white hover:text-amber-300 underline flex items-center gap-1 bg-[#111114] px-2.5 py-1 border border-[#1F1F23]"
+                    >
+                      <ExternalLink className="w-3 h-3 text-amber-400" />
+                      <span>Open Original Google Drive Link</span>
+                    </a>
+                  </div>
+                </div>
+              );
+            }
 
             if (isLinkedIn) {
               return (

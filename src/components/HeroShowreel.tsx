@@ -1,79 +1,120 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Play, Pause, Volume2, VolumeX, Maximize, Film, Sparkles, 
-  CheckCircle2, Flame, Award, Sliders, ChevronRight, MessageSquare, Headphones
+  Play, Pause, Film, Sparkles, Sliders, ChevronRight, ChevronLeft, 
+  MessageSquare, Maximize, ExternalLink, Layers, Monitor, CheckCircle2, Clapperboard
 } from 'lucide-react';
-import { SHOWREEL_CHAPTERS } from '../data/projectsData';
-import { getYouTubeId } from '../utils/videoUtils';
+
+import timeline1 from '../assets/images/hp_zbook_timeline_1_1786626843659.jpg';
+import timeline2 from '../assets/images/hp_zbook_timeline_2_1786626859738.jpg';
+import timeline3 from '../assets/images/hp_zbook_timeline_3_1786626875481.jpg';
+import timeline4 from '../assets/images/hp_zbook_timeline_4_1786626894288.jpg';
+import timeline5 from '../assets/images/hp_zbook_timeline_5_1786629791346.jpg';
+import timeline6 from '../assets/images/hp_zbook_timeline_6_1786629808669.jpg';
 
 interface HeroShowreelProps {
   onExploreClick: () => void;
   onContactClick: () => void;
 }
 
+interface TimelineSlide {
+  id: string;
+  number: string;
+  title: string;
+  subtitle: string;
+  software: string;
+  image: string;
+  description: string;
+  specs: string[];
+  videoUrl?: string;
+}
+
+const TIMELINE_SLIDES: TimelineSlide[] = [
+  {
+    id: 's1',
+    number: '01',
+    title: 'Podcast & Dialogue Multi-Track Assembly',
+    subtitle: 'Adobe Premiere Pro CC',
+    software: 'Premiere Pro',
+    image: timeline1,
+    description: 'Multi-cam podcast editing with 32-bit float audio stems, automated subtitle captions, and program monitor alignment.',
+    specs: ['6 Video Layers', '4 Audio Stems', 'Auto Subtitles', 'Dialogue EQ & Gate'],
+    videoUrl: 'https://youtube.com/shorts/_e-2YjdlOi0',
+  },
+  {
+    id: 's2',
+    number: '02',
+    title: 'Kinetic Motion Graphics & 3D Compositing',
+    subtitle: 'Adobe After Effects CC',
+    software: 'After Effects',
+    image: timeline2,
+    description: 'Keyframe speed graphing, 3D Null object motion paths, vector graphics compositing, and kinetic text animation.',
+    specs: ['27 Motion Layers', '3D Null Objects', 'Speed Graphing', 'Content-Aware Fill'],
+    videoUrl: 'https://youtube.com/shorts/sUBPZpxUfEk',
+  },
+  {
+    id: 's3',
+    number: '03',
+    title: 'Graphic Cover Art & Music Video Assembly',
+    subtitle: 'Adobe Premiere Pro & Photoshop',
+    software: 'Premiere Pro',
+    image: timeline3,
+    description: 'Integrated flyer graphic composition paired with beat-matched music video timeline cuts and transition FX.',
+    specs: ['Photoshop Integration', 'Beat-Matched Cut Pacing', 'BCC Glitch Dissolves', 'Custom LUTS'],
+    videoUrl: 'https://youtu.be/mjX7AbFfF3w',
+  },
+  {
+    id: 's4',
+    number: '04',
+    title: 'The Bethel Experience 2025 Event Edit',
+    subtitle: 'Adobe Premiere Pro & Lumetri Color',
+    software: 'Premiere Pro',
+    image: timeline4,
+    description: 'Live event aftermovie timeline featuring nested sequences, custom adjustment layers, speed ramps, and cinema aspect ratio.',
+    specs: ['Nested Sequences', 'Time Remapping Ramps', 'Lumetri Color Nodes', '2.35:1 Letterbox'],
+    videoUrl: 'https://youtu.be/JJTGo6kO5MU',
+  },
+  {
+    id: 's5',
+    number: '05',
+    title: 'Vertical 9:16 Social Reel & Kinetic Layout',
+    subtitle: 'Adobe Premiere Pro & CapCut Pro',
+    software: 'Premiere Pro',
+    image: timeline5,
+    description: 'Vertical 9:16 short-form social edit with synchronized sound design risers, impact audio meters, and dynamic text pop-ins.',
+    specs: ['9:16 Framing', 'Dynamic Text Pop-Ins', 'Impact Audio Layering', 'Speed-Ramped Cut Rhythm'],
+    videoUrl: 'https://youtube.com/shorts/j0vUBL7A_T0',
+  },
+  {
+    id: 's6',
+    number: '06',
+    title: 'Studio Audio Mixer & Multi-Channel Stems',
+    subtitle: 'Adobe Premiere Pro & Essential Sound',
+    software: 'Premiere Pro',
+    image: timeline6,
+    description: 'Multi-channel audio track mixing, console EQ balancing, noise suppression, and sound effects layering.',
+    specs: ['Studio Mix Dials', 'Dialogue Auto-Ducking', '5 Audio Busses', 'Stereo Panning'],
+    videoUrl: 'https://youtu.be/1cz_2GW9khs',
+  },
+];
+
 export const HeroShowreel: React.FC<HeroShowreelProps> = ({
   onExploreClick,
   onContactClick,
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [quality, setQuality] = useState<'4K UHD' | '1080p'>('4K UHD');
-  const [activeChapterIndex, setActiveChapterIndex] = useState(0);
-  const [isCommentaryMode, setIsCommentaryMode] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // User's created movie & flagship showreel
-  const sampleShowreelUrl = "https://youtu.be/JJTGo6kO5MU";
-  const ytId = getYouTubeId(sampleShowreelUrl);
+  // Auto-advance slideshow
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setCurrentSlideIndex((prev) => (prev + 1) % TIMELINE_SLIDES.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        const playPromise = videoRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => setIsPlaying(true))
-            .catch(() => setIsPlaying(false));
-        } else {
-          setIsPlaying(true);
-        }
-      }
-    }
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-  };
-
-  const handleSeekChapter = (seconds: number, index: number) => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = seconds;
-      if (!isPlaying) {
-        const playPromise = videoRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => setIsPlaying(true))
-            .catch(() => setIsPlaying(false));
-        }
-      }
-      setActiveChapterIndex(index);
-    }
-  };
-
-  const toggleFullscreen = () => {
-    if (videoRef.current) {
-      if (videoRef.current.requestFullscreen) {
-        videoRef.current.requestFullscreen();
-      }
-    }
-  };
+  const activeSlide = TIMELINE_SLIDES[currentSlideIndex];
 
   return (
     <section id="hero" className="relative pt-12 pb-16 lg:py-20 overflow-hidden bg-[#0A0A0B]">
@@ -120,157 +161,144 @@ export const HeroShowreel: React.FC<HeroShowreelProps> = ({
           </div>
         </div>
 
-        {/* Showreel Video Player Container */}
-        <div className="relative overflow-hidden bg-[#111114] border border-[#1F1F23] shadow-2xl group">
+        {/* Timeline Pictures & Workspace Slideshow Container */}
+        <div className="relative overflow-hidden bg-[#111114] border border-[#1F1F23] shadow-2xl max-w-5xl mx-auto group">
           
-          {/* Top Bar Status Badges */}
-          <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
-            <div className="flex items-center gap-2.5 bg-[#0A0A0B]/90 backdrop-blur-md px-3.5 py-1.5 border border-[#1F1F23] pointer-events-auto">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-[10px] font-mono font-bold tracking-widest text-white uppercase">FEATURE FILM &amp; DIRECTOR REEL</span>
-              <span className="text-[9px] bg-[#1F1F23] text-[#88888C] px-1.5 py-0.5 font-mono uppercase">
-                {quality}
+          {/* Top Bar Header */}
+          <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 z-20 flex items-center justify-between pointer-events-none">
+            <div className="flex items-center gap-2 bg-[#0A0A0B]/90 backdrop-blur-md px-3 py-1.5 border border-[#1F1F23] pointer-events-auto">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 uppercase">
+                POST-PRODUCTION WORKSPACE ({activeSlide.number}/{TIMELINE_SLIDES.length})
+              </span>
+              <span className="hidden sm:inline text-[9px] bg-[#1F1F23] text-white px-2 py-0.5 font-mono uppercase">
+                {activeSlide.software}
               </span>
             </div>
 
             <div className="flex items-center gap-2 pointer-events-auto">
-              {/* Commentary audio mode */}
               <button
-                onClick={() => setIsCommentaryMode(!isCommentaryMode)}
-                className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-mono uppercase tracking-wider border transition-all ${
-                  isCommentaryMode 
-                    ? 'bg-white text-black border-white font-bold' 
-                    : 'bg-[#0A0A0B]/90 text-[#88888C] border-[#1F1F23] hover:text-white'
-                }`}
-                title="Toggle Director's Audio Commentary Track"
-              >
-                <Headphones className="w-3 h-3" />
-                <span className="hidden sm:inline">Commentary</span>
-              </button>
-
-              {/* Quality selector */}
-              <button
-                onClick={() => setQuality(quality === '4K UHD' ? '1080p' : '4K UHD')}
-                className="bg-[#0A0A0B]/90 text-[#88888C] hover:text-white border border-[#1F1F23] px-2.5 py-1 text-[10px] font-mono transition-all uppercase"
-              >
-                {quality}
-              </button>
-            </div>
-          </div>
-
-          {/* Actual Video Element */}
-          <div className="relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden">
-            {ytId ? (
-              <iframe
-                src={`https://www.youtube.com/embed/${ytId}?autoplay=0&rel=0&playsinline=1`}
-                title="Ekreates Director Showreel"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full object-cover border-0"
-              />
-            ) : (
-              <video
-                ref={videoRef}
-                src={sampleShowreelUrl}
-                poster="https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1600&q=80"
-                muted={isMuted}
-                loop
-                playsInline
-                onError={() => setVideoError(true)}
-                className="w-full h-full object-cover"
-              />
-            )}
-
-            {/* Overlay Gradient for readability */}
-            {!ytId && <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-black/50 pointer-events-none" />}
-
-            {/* Play Button Overlay (when paused for HTML5 video) */}
-            {!ytId && !isPlaying && (
-              <div 
-                onClick={togglePlay}
-                className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black/40 backdrop-blur-[2px] transition-all hover:bg-black/30"
-              >
-                <div className="w-16 h-16 rounded-full border border-white/30 bg-black/60 backdrop-blur-md flex items-center justify-center text-white transition-transform group-hover:scale-110">
-                  <Play className="w-6 h-6 fill-white ml-1" />
-                </div>
-              </div>
-            )}
-
-            {/* Commentary Banner (if active) */}
-            {isCommentaryMode && (
-              <div className="absolute bottom-16 left-4 right-4 sm:left-6 sm:right-6 bg-[#0A0A0B]/95 border border-[#3A3A3F] backdrop-blur-md p-3.5 text-xs text-[#E2E2E2] flex items-center gap-3">
-                <MessageSquare className="w-4 h-4 text-white shrink-0" />
-                <div>
-                  <span className="font-bold text-white font-mono uppercase tracking-wider text-[10px] block">DIRECTOR COMMENTARY: </span>
-                  <span className="italic font-serif-italic text-sm text-[#88888C]">
-                    &quot;{SHOWREEL_CHAPTERS[activeChapterIndex].description}&quot;
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Interactive Player Controls & Chapter Selector */}
-          <div className="p-4 bg-[#0A0A0B] border-t border-[#1F1F23] space-y-3">
-            
-            {/* Player Main Controls Row */}
-            <div className="flex flex-wrap items-center justify-between gap-3 text-[#E2E2E2]">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={togglePlay}
-                  className="p-2 border border-[#3A3A3F] bg-white text-black hover:bg-transparent hover:text-white transition-all"
-                >
-                  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                </button>
-
-                <button
-                  onClick={toggleMute}
-                  className="p-2 bg-[#111114] border border-[#1F1F23] text-[#88888C] hover:text-white transition-all"
-                  title={isMuted ? "Unmute" : "Mute"}
-                >
-                  {isMuted ? <VolumeX className="w-3.5 h-3.5 text-red-400" /> : <Volume2 className="w-3.5 h-3.5 text-emerald-400" />}
-                </button>
-
-                <div className="text-[11px] font-mono text-[#88888C] hidden sm:block">
-                  <span className="text-white font-bold">{SHOWREEL_CHAPTERS[activeChapterIndex].timestamp}</span> / 02:30
-                </div>
-              </div>
-
-              <div className="text-[11px] font-mono text-[#88888C] flex items-center gap-2">
-                <span className="text-[#4A4A4F] uppercase tracking-widest">CHAPTER:</span>
-                <span className="text-white font-semibold uppercase">{SHOWREEL_CHAPTERS[activeChapterIndex].title}</span>
-              </div>
-
-              <button
-                onClick={toggleFullscreen}
-                className="p-2 bg-[#111114] border border-[#1F1F23] text-[#88888C] hover:text-white transition-all"
-                title="Fullscreen"
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="p-1.5 bg-[#0A0A0B]/90 text-[#88888C] hover:text-white border border-[#1F1F23] transition-all"
+                title="Toggle Fullscreen Picture View"
               >
                 <Maximize className="w-3.5 h-3.5" />
               </button>
             </div>
+          </div>
 
-            {/* Chapters Timestamp Selector Pills */}
-            <div className="pt-2 border-t border-[#1F1F23] flex items-center gap-2 overflow-x-auto scrollbar-none pb-1">
-              <span className="text-[10px] font-mono text-[#4A4A4F] uppercase tracking-widest shrink-0 pr-1">
-                INDEX:
-              </span>
-              {SHOWREEL_CHAPTERS.map((ch, idx) => (
+          {/* Main Picture Frame */}
+          <div className={`relative w-full bg-black flex items-center justify-center overflow-hidden transition-all ${
+            isFullscreen ? 'h-[80vh]' : 'aspect-[16/10] sm:aspect-[16/9]'
+          }`}>
+            
+            {/* Timeline Workspace Image */}
+            <img
+              src={activeSlide.image}
+              alt={activeSlide.title}
+              className="w-full h-full object-contain transition-transform duration-700"
+            />
+
+            {/* Gradient Shadow Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-black/40 pointer-events-none" />
+
+            {/* Previous & Next Slide Controls */}
+            <button
+              onClick={() => setCurrentSlideIndex((prev) => (prev - 1 + TIMELINE_SLIDES.length) % TIMELINE_SLIDES.length)}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded bg-[#0A0A0B]/80 hover:bg-white text-white hover:text-black border border-[#2A2A30] transition-all group shadow-xl"
+              title="Previous Timeline Picture"
+            >
+              <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+            </button>
+
+            <button
+              onClick={() => setCurrentSlideIndex((prev) => (prev + 1) % TIMELINE_SLIDES.length)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded bg-[#0A0A0B]/80 hover:bg-white text-white hover:text-black border border-[#2A2A30] transition-all group shadow-xl"
+              title="Next Timeline Picture"
+            >
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+
+            {/* Active Slide Specs Overlay */}
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-[#0A0A0B]/95 backdrop-blur-md p-3.5 rounded border border-[#1F1F23] gap-3">
+              <div className="flex items-center gap-3 w-full sm:w-auto overflow-hidden">
                 <button
-                  key={ch.id}
-                  onClick={() => handleSeekChapter(ch.seconds, idx)}
-                  className={`shrink-0 px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider flex items-center gap-1.5 transition-all border ${
-                    activeChapterIndex === idx
-                      ? 'bg-white text-black border-white font-bold'
-                      : 'bg-[#111114] border-[#1F1F23] text-[#88888C] hover:text-white hover:border-[#3A3A3F]'
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="p-2 border border-[#3A3A3F] bg-white text-black hover:bg-transparent hover:text-white transition-all shrink-0"
+                  title={isPlaying ? "Pause Slideshow" : "Start Slideshow"}
+                >
+                  {isPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
+                </button>
+
+                <div className="overflow-hidden">
+                  <p className="text-xs sm:text-sm font-bold text-white tracking-wide truncate">
+                    {activeSlide.title}
+                  </p>
+                  <p className="text-[10px] sm:text-xs text-[#88888C] font-mono truncate">
+                    {activeSlide.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Specs Pills */}
+              <div className="hidden lg:flex items-center gap-1.5 shrink-0">
+                {activeSlide.specs.map((spec, idx) => (
+                  <span key={idx} className="text-[9px] font-mono text-[#E2E2E2] bg-[#111114] border border-[#1F1F23] px-2 py-0.5 rounded">
+                    {spec}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Interactive Timeline Pictures Selector Grid */}
+          <div className="p-4 bg-[#0A0A0B] border-t border-[#1F1F23] space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Clapperboard className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-mono uppercase tracking-wider text-white font-semibold">
+                  Post-Production Timeline Screenshots &amp; Workstations
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-[#88888C] hidden sm:inline">
+                Click any picture to inspect Adobe workspace
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+              {TIMELINE_SLIDES.map((slide, idx) => (
+                <button
+                  key={slide.id}
+                  onClick={() => {
+                    setCurrentSlideIndex(idx);
+                    setIsPlaying(false);
+                  }}
+                  className={`p-2 rounded border text-left transition-all relative overflow-hidden flex flex-col justify-between ${
+                    idx === currentSlideIndex
+                      ? 'bg-[#18181C] border-white text-white shadow-md'
+                      : 'bg-[#111114] border-[#1F1F23] text-[#88888C] hover:border-[#3A3A3F] hover:text-white'
                   }`}
                 >
-                  <span className="font-bold">{ch.timestamp}</span>
-                  <span>{ch.niche}</span>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[9px] font-mono text-amber-400 font-bold">
+                      SLIDE {slide.number}
+                    </span>
+                    <span className="text-[8px] font-mono text-[#88888C] uppercase">
+                      {slide.software}
+                    </span>
+                  </div>
+                  <p className="text-[11px] font-medium line-clamp-1 text-white">
+                    {slide.title}
+                  </p>
+                  {idx === currentSlideIndex && (
+                    <div className="mt-1.5 h-0.5 bg-amber-400 rounded-full w-full animate-pulse" />
+                  )}
                 </button>
               ))}
             </div>
           </div>
+
         </div>
 
         {/* Quick Stats & Credentials Banner */}

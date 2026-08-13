@@ -21,28 +21,34 @@ import { PROJECTS_DATA } from './data/projectsData';
 import { Project, ProjectNiche } from './types';
 import { Film, Plus, RotateCcw, ArrowLeft } from 'lucide-react';
 
-const STORAGE_KEY = 'ekreates_portfolio_projects';
+const STORAGE_KEY = 'ekreates_portfolio_projects_v5';
 
 export default function App() {
   const [projectsList, setProjectsList] = useState<Project[]>(() => {
     try {
+      // Clear legacy storage key if present
+      localStorage.removeItem('ekreates_portfolio_projects');
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Merge any newly added default projects from PROJECTS_DATA that might be missing in localStorage
-          const existingIds = new Set(parsed.map((p: Project) => p.id));
-          const missingDefaults = PROJECTS_DATA.filter((p) => !existingIds.has(p.id));
+          // Filter out deleted Reel 08 or stale items
+          const sanitized = parsed.filter(
+            (p: Project) => p.id !== 'reel_8' && !p.videoUrl?.includes('QSHohrusMHg')
+          );
+          // Merge any newly added default projects from PROJECTS_DATA that might be missing
+          const existingIds = new Set(sanitized.map((p: Project) => p.id));
+          const missingDefaults = PROJECTS_DATA.filter((p) => !existingIds.has(p.id) && p.id !== 'reel_8');
           if (missingDefaults.length > 0) {
-            return [...missingDefaults, ...parsed];
+            return [...missingDefaults, ...sanitized];
           }
-          return parsed;
+          return sanitized;
         }
       }
     } catch (e) {
       console.error('Failed to load saved projects', e);
     }
-    return PROJECTS_DATA;
+    return PROJECTS_DATA.filter((p) => p.id !== 'reel_8');
   });
 
   const [selectedNiche, setSelectedNiche] = useState<ProjectNiche | 'all'>('all');
@@ -60,6 +66,30 @@ export default function App() {
   // Navigation history & Back button support
   const [sectionHistory, setSectionHistory] = useState<string[]>(['hero']);
   const [showBackButton, setShowBackButton] = useState(false);
+
+  // Deep link handling: Open project from URL search query on load and sync URL when project opens/closes
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get('project');
+    if (projectId) {
+      const found = projectsList.find(
+        (p) => p.id === projectId || p.title.toLowerCase() === projectId.toLowerCase()
+      );
+      if (found) {
+        setSelectedProject(found);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (selectedProject) {
+      url.searchParams.set('project', selectedProject.id);
+    } else {
+      url.searchParams.delete('project');
+    }
+    window.history.replaceState(null, '', url.toString());
+  }, [selectedProject]);
 
   // Save projects to localStorage whenever changed
   useEffect(() => {

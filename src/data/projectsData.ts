@@ -1,4 +1,5 @@
 import { Project, ShowreelChapter } from '../types';
+import dramaThrillerThumb from '../assets/images/drama_thriller_thumb_1786630403373.jpg';
 
 export const SHOWREEL_CHAPTERS: ShowreelChapter[] = [
   { id: '1', timestamp: '0:00', seconds: 0, title: 'Vertical Social Reels (9:16)', niche: 'Social Shorts', description: 'High-retention mobile short-form video edits with dynamic captions & kinetic sound design.' },
@@ -327,6 +328,35 @@ export const PROJECTS_DATA: Project[] = [
       audioTracks: 10,
       vfxLayers: 10,
       colorNodes: 8,
+    },
+  },
+  {
+    id: 'drama_thriller_1',
+    title: 'Drama Thriller Narrative Master',
+    client: 'Ekreates Cinema Productions',
+    niche: 'narrative',
+    nicheLabel: 'Drama Thriller Short',
+    thumbnailUrl: dramaThrillerThumb,
+    videoUrl: 'https://drive.google.com/file/d/12SrQ96SGp_Jew6YRq793xr0e7fcXtRBp/view?usp=sharing',
+    aspectRatio: '2.39:1',
+    year: '2026',
+    duration: 'Drama Thriller',
+    role: ['Director', 'Cinematographer', 'Lead Post Editor', 'Sound Designer'],
+    summary: 'A suspenseful, high-tension drama thriller film production featuring atmospheric low-key cinematography, moody color grading, and psychological sound design.',
+    description: 'Directed, shot, and post-edited by Kisira Emmanuel. Assembled in Adobe Premiere Pro and After Effects on an HP ZBook Mobile Workstation. Features tight narrative pacing, atmospheric low-key lighting, custom suspenseful audio risers, and a 2.39:1 anamorphic widescreen color grade.',
+    viewsCount: '1.9M Views',
+    featured: true,
+    cameraUsed: 'Full-Frame Cinema Camera Package',
+    lensesUsed: 'Anamorphic & Prime Cinema Lenses',
+    softwareUsed: ['Adobe Premiere Pro', 'After Effects', 'Photoshop'],
+    colorGradingBeforeUrl: dramaThrillerThumb,
+    colorGradingAfterUrl: dramaThrillerThumb,
+    colorProfile: 'Moody Teal & Amber Low-Key Grade',
+    timelineTrackCount: {
+      videoTracks: 14,
+      audioTracks: 18,
+      vfxLayers: 16,
+      colorNodes: 22,
     },
   },
   {

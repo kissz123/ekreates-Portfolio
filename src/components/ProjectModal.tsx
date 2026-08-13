@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { 
   X, Play, Pause, Volume2, VolumeX, Maximize, Film, Camera, 
-  Sliders, Layers, Sparkles, CheckCircle2, MessageSquare, ExternalLink, Share2, Award, Linkedin, ArrowLeft
+  Sliders, Layers, Sparkles, CheckCircle2, MessageSquare, ExternalLink, Share2, Award, Linkedin, ArrowLeft, Trash2
 } from 'lucide-react';
 import { Project } from '../types';
 import { getYouTubeId } from '../utils/videoUtils';
@@ -10,12 +10,14 @@ interface ProjectModalProps {
   project: Project | null;
   onClose: () => void;
   onBookProjectWithData: (projectTitle: string) => void;
+  onDeleteProject?: (projectId: string) => void;
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({
   project,
   onClose,
   onBookProjectWithData,
+  onDeleteProject,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -77,6 +79,22 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            {onDeleteProject && (
+              <button
+                onClick={() => {
+                  if (window.confirm(`Are you sure you want to remove "${project.title}" from your portfolio?`)) {
+                    onDeleteProject(project.id);
+                    onClose();
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800/60 text-[10px] font-mono tracking-wider uppercase transition-all rounded"
+                title="Remove Video from Portfolio"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                <span className="hidden sm:inline">Delete Video</span>
+              </button>
+            )}
+
             <button
               onClick={() => onBookProjectWithData(project.title)}
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 border border-[#3A3A3F] bg-white text-black font-bold text-[10px] tracking-widest uppercase hover:bg-transparent hover:text-white transition-all rounded"

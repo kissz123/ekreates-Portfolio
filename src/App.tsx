@@ -132,6 +132,13 @@ export default function App() {
     setProjectsList((prev) => [newProject, ...prev]);
   };
 
+  const handleDeleteProject = (projectId: string) => {
+    setProjectsList((prev) => prev.filter((p) => p.id !== projectId));
+    if (selectedProject?.id === projectId) {
+      setSelectedProject(null);
+    }
+  };
+
   const handleResetProjects = () => {
     if (window.confirm('Reset portfolio back to default sample works?')) {
       setProjectsList(PROJECTS_DATA);
@@ -272,6 +279,7 @@ export default function App() {
                   key={project.id}
                   project={project}
                   onSelectProject={setSelectedProject}
+                  onDeleteProject={handleDeleteProject}
                   layoutMode="reels"
                 />
               ))}
@@ -283,6 +291,7 @@ export default function App() {
                   key={project.id}
                   project={project}
                   onSelectProject={setSelectedProject}
+                  onDeleteProject={handleDeleteProject}
                   layoutMode="list"
                 />
               ))}
@@ -294,6 +303,7 @@ export default function App() {
                   key={project.id}
                   project={project}
                   onSelectProject={setSelectedProject}
+                  onDeleteProject={handleDeleteProject}
                   layoutMode="grid"
                 />
               ))}
@@ -331,6 +341,7 @@ export default function App() {
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
         onBookProjectWithData={handleBookProjectWithData}
+        onDeleteProject={handleDeleteProject}
       />
 
       {/* Add New Project Modal */}

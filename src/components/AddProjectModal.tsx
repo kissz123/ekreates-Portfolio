@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Video, Film, Sparkles, Image, Check, Trash2, Link } from 'lucide-react';
+import { X, Plus, Video, Film, Sparkles, Image, Check, Trash2, Link, ArrowLeft } from 'lucide-react';
 import { Project, ProjectNiche } from '../types';
 
 interface AddProjectModalProps {
@@ -12,7 +12,7 @@ const PRESET_THUMBNAILS = [
   { label: 'Cinematic Night', url: 'https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1200&q=80' },
   { label: 'Studio Concert', url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80' },
   { label: 'Urban Fashion', url: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80' },
-  { label: 'Drone Aerial', url: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80' },
+  { label: 'Motion FX & Compositing', url: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1200&q=80' },
   { label: 'Corporate Tech', url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80' },
 ];
 
@@ -75,7 +75,7 @@ export const AddProjectModal: React.FC<AddProjectModalProps> = ({
       case 'social_reels': return 'Social Reel (9:16)';
       case 'corporate': return 'Corporate Story';
       case 'events': return 'Event Aftermovie';
-      case 'drone_fpv': return 'Drone FPV Aerial';
+      case 'motion_fx': return 'Motion FX & Post';
       case 'narrative': return 'Short Film';
       default: return 'Video Project';
     }
@@ -129,9 +129,14 @@ export const AddProjectModal: React.FC<AddProjectModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#1F1F23] bg-[#111114]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Plus className="w-4 h-4" />
-            </div>
+            <button
+              onClick={onClose}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0A0A0B] hover:bg-[#1A1A1E] text-white border border-[#1F1F23] hover:border-amber-500/50 text-xs font-mono transition-all rounded group"
+              title="Return to Previous Page"
+            >
+              <ArrowLeft className="w-4 h-4 text-amber-400 group-hover:-translate-x-0.5 transition-transform" />
+              <span>Back</span>
+            </button>
             <div>
               <h3 className="text-base font-bold text-white tracking-wide">Add New Portfolio Work</h3>
               <p className="text-xs text-[#88888C] font-mono">Expand Ekreates Portfolio Gallery</p>
@@ -140,6 +145,7 @@ export const AddProjectModal: React.FC<AddProjectModalProps> = ({
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-[#88888C] hover:text-white hover:bg-[#1F1F23] transition-colors"
+            title="Close"
           >
             <X className="w-5 h-5" />
           </button>
@@ -195,7 +201,7 @@ export const AddProjectModal: React.FC<AddProjectModalProps> = ({
                 <option value="corporate">Corporate & Tech</option>
                 <option value="events">Event Aftermovie</option>
                 <option value="documentaries">Documentary</option>
-                <option value="drone_fpv">Drone / FPV Aerial</option>
+                <option value="motion_fx">Motion FX &amp; Visual Post</option>
                 <option value="narrative">Short Film / Narrative</option>
               </select>
             </div>

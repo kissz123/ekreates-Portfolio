@@ -13,7 +13,6 @@ export const GearToolkit: React.FC = () => {
     ? GEAR_ITEMS
     : GEAR_ITEMS.filter((g) => {
         if (selectedCategory === 'camera_optics') return g.category === 'camera' || g.category === 'lens';
-        if (selectedCategory === 'drones') return g.category === 'drone';
         if (selectedCategory === 'audio_lighting') return g.category === 'audio' || g.category === 'lighting';
         if (selectedCategory === 'post_suite') return g.category === 'post_software' || g.category === 'post_hardware';
         return true;
@@ -50,7 +49,7 @@ export const GearToolkit: React.FC = () => {
             PRODUCTION <span className="italic font-serif-italic font-normal">Toolkit</span>
           </h2>
           <p className="text-sm text-[#88888C] max-w-xl mx-auto font-sans">
-            Powered by my flagship HP ZBook mobile workstation, Adobe post-suite, and full production access to professional cinema cameras &amp; aerial systems.
+            Powered by my flagship HP ZBook mobile workstation, Adobe post-suite, and professional cinema camera gear &amp; audio systems.
           </p>
         </div>
 
@@ -59,7 +58,6 @@ export const GearToolkit: React.FC = () => {
           {[
             { id: 'all', label: 'All Equipment' },
             { id: 'camera_optics', label: 'Cameras & Cinema Lenses' },
-            { id: 'drones', label: 'Drones & Aerial FPV' },
             { id: 'audio_lighting', label: '32-Bit Audio & Lighting' },
             { id: 'post_suite', label: 'Post-Production & Editing' },
           ].map((cat) => (

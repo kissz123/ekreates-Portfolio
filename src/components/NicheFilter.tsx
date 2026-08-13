@@ -21,7 +21,7 @@ const NICHES_LIST: { id: ProjectNiche | 'all'; label: string; icon: React.FC<{ c
   { id: 'music_videos', label: 'Music Videos', icon: Music },
   { id: 'documentaries', label: 'Documentaries', icon: Film },
   { id: 'social_reels', label: 'Social Reels (9:16)', icon: Smartphone },
-  { id: 'drone_fpv', label: 'Drone & FPV', icon: Compass },
+  { id: 'motion_fx', label: 'Motion FX & Editing', icon: Compass },
   { id: 'corporate', label: 'Corporate Stories', icon: Video },
   { id: 'events', label: 'Events & Festivals', icon: Globe },
   { id: 'narrative', label: 'Cinematic Narrative', icon: Camera },

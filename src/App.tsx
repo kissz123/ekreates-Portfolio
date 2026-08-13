@@ -19,7 +19,7 @@ import { Footer } from './components/Footer';
 
 import { PROJECTS_DATA } from './data/projectsData';
 import { Project, ProjectNiche } from './types';
-import { Film, Plus, RotateCcw } from 'lucide-react';
+import { Film, Plus, RotateCcw, ArrowLeft } from 'lucide-react';
 
 const STORAGE_KEY = 'ekreates_portfolio_projects';
 
@@ -57,6 +57,10 @@ export default function App() {
   const [contactEstimateText, setContactEstimateText] = useState('');
   const [contactBudgetRange, setContactBudgetRange] = useState('');
 
+  // Navigation history & Back button support
+  const [sectionHistory, setSectionHistory] = useState<string[]>(['hero']);
+  const [showBackButton, setShowBackButton] = useState(false);
+
   // Save projects to localStorage whenever changed
   useEffect(() => {
     try {
@@ -65,6 +69,64 @@ export default function App() {
       console.error('Failed to save projects to storage', e);
     }
   }, [projectsList]);
+
+  // Track scrolling to toggle floating back button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackButton(window.scrollY > 250 || sectionHistory.length > 1 || selectedProject !== null || isAddWorkModalOpen);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [sectionHistory, selectedProject, isAddWorkModalOpen]);
+
+  // Back action: Closes open modal or scrolls back to previous section / top
+  const handleGoBack = () => {
+    if (selectedProject) {
+      setSelectedProject(null);
+      return;
+    }
+    if (isAddWorkModalOpen) {
+      setIsAddWorkModalOpen(false);
+      return;
+    }
+    if (sectionHistory.length > 1) {
+      const updated = [...sectionHistory];
+      updated.pop(); // Pop current
+      const prevSection = updated[updated.length - 1];
+      setSectionHistory(updated);
+      const el = document.getElementById(prevSection);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Sync browser popstate (browser back button)
+  useEffect(() => {
+    const handlePopState = () => {
+      if (selectedProject) {
+        setSelectedProject(null);
+      } else if (isAddWorkModalOpen) {
+        setIsAddWorkModalOpen(false);
+      } else if (sectionHistory.length > 1) {
+        handleGoBack();
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [selectedProject, isAddWorkModalOpen, sectionHistory]);
+
+  // Push browser history state when opening modals
+  useEffect(() => {
+    if (selectedProject || isAddWorkModalOpen) {
+      window.history.pushState({ modalOpen: true }, '');
+    }
+  }, [selectedProject, isAddWorkModalOpen]);
 
   const handleAddProject = (newProject: Project) => {
     setProjectsList((prev) => [newProject, ...prev]);
@@ -100,6 +162,12 @@ export default function App() {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+      setSectionHistory((prev) => {
+        if (prev[prev.length - 1] !== id) {
+          return [...prev, id];
+        }
+        return prev;
+      });
     }
   };
 
@@ -149,7 +217,7 @@ export default function App() {
               MULTI-NICHE PORTFOLIO GALLERY
             </h2>
             <p className="text-sm sm:text-base text-slate-300">
-              Filter through high-impact commercials, music videos, documentaries, vertical reels, corporate brand stories, and drone FPV aerials.
+              Filter through high-impact commercials, music videos, documentaries, vertical reels, corporate brand stories, and motion graphics post.
             </p>
 
             {/* Quick Add Work CTA */}
@@ -271,6 +339,18 @@ export default function App() {
         onClose={() => setIsAddWorkModalOpen(false)}
         onAddProject={handleAddProject}
       />
+
+      {/* Floating Back to Previous Page Button */}
+      {showBackButton && (
+        <button
+          onClick={handleGoBack}
+          className="fixed bottom-6 left-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-[#0F0F12]/90 backdrop-blur-md hover:bg-[#1A1A1E] text-white border border-[#2A2A30] hover:border-amber-500/60 shadow-2xl rounded-full text-xs font-mono font-bold tracking-wider transition-all duration-300 group hover:scale-105 active:scale-95"
+          title="Back to Previous Page / Section"
+        >
+          <ArrowLeft className="w-4 h-4 text-amber-400 group-hover:-translate-x-1 transition-transform" />
+          <span>Back</span>
+        </button>
+      )}
 
     </div>
   );

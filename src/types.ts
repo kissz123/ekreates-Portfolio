@@ -5,7 +5,7 @@ export type ProjectNiche =
   | 'social_reels'
   | 'corporate'
   | 'events'
-  | 'drone_fpv'
+  | 'motion_fx'
   | 'narrative';
 
 export interface Project {
@@ -55,7 +55,7 @@ export interface Project {
 export interface GearItem {
   id: string;
   name: string;
-  category: 'camera' | 'lens' | 'drone' | 'audio' | 'lighting' | 'post_software' | 'post_hardware';
+  category: 'camera' | 'lens' | 'audio' | 'lighting' | 'post_software' | 'post_hardware';
   categoryLabel: string;
   specs: string;
   description: string;

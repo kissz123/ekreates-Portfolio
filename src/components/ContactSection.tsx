@@ -184,7 +184,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       <option value="social_reels">Social Vertical Reels</option>
                       <option value="corporate">Corporate Story</option>
                       <option value="events">Event Aftermovie</option>
-                      <option value="drone_fpv">FPV Aerial Shoot</option>
+                      <option value="motion_fx">Motion FX &amp; Visual Post</option>
                     </select>
                   </div>
 

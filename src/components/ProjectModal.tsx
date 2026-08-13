@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { 
   X, Play, Pause, Volume2, VolumeX, Maximize, Film, Camera, 
-  Sliders, Layers, Sparkles, CheckCircle2, MessageSquare, ExternalLink, Share2, Award, Linkedin
+  Sliders, Layers, Sparkles, CheckCircle2, MessageSquare, ExternalLink, Share2, Award, Linkedin, ArrowLeft
 } from 'lucide-react';
 import { Project } from '../types';
 import { getYouTubeId } from '../utils/videoUtils';
@@ -57,27 +57,37 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
       <div className="relative w-full max-w-5xl my-auto bg-[#0A0A0B] border border-[#1F1F23] overflow-hidden shadow-2xl text-[#E2E2E2] max-h-[92vh] flex flex-col">
         
         {/* Top Header Bar */}
-        <div className="p-4 bg-[#111114] border-b border-[#1F1F23] flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="px-2.5 py-1 bg-[#0A0A0B] text-[#88888C] border border-[#1F1F23] text-[10px] font-mono uppercase tracking-widest">
+        <div className="p-3 sm:p-4 bg-[#111114] border-b border-[#1F1F23] flex items-center justify-between shrink-0 gap-2">
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <button
+              onClick={onClose}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0A0A0B] hover:bg-[#1A1A1E] text-white border border-[#1F1F23] hover:border-amber-500/50 text-xs font-mono tracking-wider transition-all rounded group shrink-0"
+              title="Return to Previous Page"
+            >
+              <ArrowLeft className="w-4 h-4 text-amber-400 group-hover:-translate-x-0.5 transition-transform" />
+              <span className="hidden sm:inline">Back to Previous Page</span>
+              <span className="sm:hidden">Back</span>
+            </button>
+            <span className="hidden md:inline-block px-2.5 py-1 bg-[#0A0A0B] text-[#88888C] border border-[#1F1F23] text-[10px] font-mono uppercase tracking-widest shrink-0">
               {project.nicheLabel}
             </span>
-            <h2 className="text-base sm:text-lg font-medium text-white truncate max-w-md">
+            <h2 className="text-sm sm:text-base font-medium text-white truncate">
               {project.title}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => onBookProjectWithData(project.title)}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 border border-[#3A3A3F] bg-white text-black font-bold text-[10px] tracking-widest uppercase hover:bg-transparent hover:text-white transition-all"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 border border-[#3A3A3F] bg-white text-black font-bold text-[10px] tracking-widest uppercase hover:bg-transparent hover:text-white transition-all rounded"
             >
               <span>Inquire Similar Project</span>
             </button>
 
             <button
               onClick={onClose}
-              className="p-2 bg-[#0A0A0B] text-[#88888C] hover:text-white border border-[#1F1F23] transition-all"
+              className="p-2 bg-[#0A0A0B] text-[#88888C] hover:text-white border border-[#1F1F23] transition-all rounded"
+              title="Close"
             >
               <X className="w-5 h-5" />
             </button>
@@ -484,6 +494,24 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
               </div>
             </div>
           )}
+
+          {/* Bottom Back Button Footer Action */}
+          <div className="pt-6 border-t border-[#1F1F23] flex flex-wrap items-center justify-between gap-4">
+            <button
+              onClick={onClose}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#111114] hover:bg-[#1A1A1E] text-white border border-[#1F1F23] hover:border-amber-500/50 text-xs font-mono uppercase tracking-wider transition-all rounded group"
+            >
+              <ArrowLeft className="w-4 h-4 text-amber-400 group-hover:-translate-x-0.5 transition-transform" />
+              <span>Back to Previous Page</span>
+            </button>
+
+            <button
+              onClick={() => onBookProjectWithData(project.title)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-widest transition-all rounded shadow-md"
+            >
+              <span>Inquire Similar Project</span>
+            </button>
+          </div>
 
         </div>
       </div>

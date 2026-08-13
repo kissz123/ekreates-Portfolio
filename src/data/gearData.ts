@@ -68,17 +68,6 @@ export const GEAR_ITEMS: GearItem[] = [
     availability: 'PRODUCTION ACCESS',
   },
   {
-    id: 'g7',
-    name: 'Aerial Drones & FPV Quad Systems',
-    category: 'drone',
-    categoryLabel: 'Aerial Systems Access',
-    specs: '4K/8K Cinema Aerial Drones & High-Speed FPV Systems',
-    description: 'Access to professional aerial photography drones and FPV quad setups for dynamic overhead and high-speed motion shots.',
-    iconName: 'Plane',
-    badge: 'On-Demand Access',
-    availability: 'PRODUCTION ACCESS',
-  },
-  {
     id: 'g8',
     name: 'Location Lighting & Grip Essentials',
     category: 'lighting',

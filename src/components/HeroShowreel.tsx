@@ -23,8 +23,8 @@ export const HeroShowreel: React.FC<HeroShowreelProps> = ({
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // User's flagship showreel video
-  const sampleShowreelUrl = "https://youtube.com/shorts/_e-2YjdlOi0?feature=share";
+  // User's created movie & flagship showreel
+  const sampleShowreelUrl = "https://youtu.be/JJTGo6kO5MU";
   const ytId = getYouTubeId(sampleShowreelUrl);
 
   const togglePlay = () => {
@@ -97,7 +97,7 @@ export const HeroShowreel: React.FC<HeroShowreelProps> = ({
           </h1>
 
           <p className="text-sm sm:text-base text-[#88888C] max-w-2xl mx-auto font-sans leading-relaxed">
-            Ekreates.MOV studio directed by <strong className="text-white">Kisira Emmanuel</strong> — Videographer, Lead Video Editor, and Creative Director. Delivering high-retention visual storytelling, cinematic color grading, motion graphics, and mobile short-form content mastered in <span className="text-white font-medium">Adobe Premiere Pro, After Effects, Photoshop</span>, and <span className="text-white font-medium">CapCut Pro</span>.
+            Ekreates.MOV studio directed by <strong className="text-white">Kisira Emmanuel</strong> — Videographer, Lead Video Editor, and Creative Director. Delivering high-retention visual storytelling, cinematic color grading, motion graphics, and mobile short-form content mastered using <span className="text-white font-medium">industry-standard post-production software</span>.
           </p>
 
           {/* Quick CTA row */}
@@ -127,7 +127,7 @@ export const HeroShowreel: React.FC<HeroShowreelProps> = ({
           <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-none">
             <div className="flex items-center gap-2.5 bg-[#0A0A0B]/90 backdrop-blur-md px-3.5 py-1.5 border border-[#1F1F23] pointer-events-auto">
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-[10px] font-mono font-bold tracking-widest text-white uppercase">2026 DIRECTOR&apos;S REEL</span>
+              <span className="text-[10px] font-mono font-bold tracking-widest text-white uppercase">FEATURE FILM &amp; DIRECTOR REEL</span>
               <span className="text-[9px] bg-[#1F1F23] text-[#88888C] px-1.5 py-0.5 font-mono uppercase">
                 {quality}
               </span>
@@ -276,7 +276,7 @@ export const HeroShowreel: React.FC<HeroShowreelProps> = ({
         {/* Quick Stats & Credentials Banner */}
         <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="p-6 bg-[#111114] border border-[#1F1F23] text-center space-y-1">
-            <p className="text-3xl font-light text-white font-mono">120+</p>
+            <p className="text-2xl sm:text-3xl font-light text-white font-mono uppercase tracking-wider">MULTIPLE</p>
             <p className="text-[10px] uppercase tracking-widest text-[#88888C]">Projects Delivered</p>
           </div>
 

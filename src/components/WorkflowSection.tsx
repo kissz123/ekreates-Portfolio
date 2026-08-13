@@ -22,7 +22,7 @@ export const WorkflowSection: React.FC = () => {
       subtitle: 'On-Set Camera Packages, Lighting & Audio',
       icon: Camera,
       desc: 'Executing the vision on location with professional camera packages, cinematic lighting setups, 32-bit float audio recording, and stabilized movement.',
-      deliverables: ['High-Bitrate RAW / Log Footage', 'Multi-Cam Synchronized Audio', 'Lighting & Grip Setup', 'Aerial & Gimbal Movement'],
+      deliverables: ['High-Bitrate RAW / Log Footage', 'Multi-Cam Synchronized Audio', 'Lighting & Grip Setup', 'Handheld & Gimbal Movement'],
     },
     {
       num: '03',

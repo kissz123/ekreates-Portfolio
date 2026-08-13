@@ -19,7 +19,7 @@ export const ResumeSection: React.FC = () => {
             ABOUT <span className="italic font-serif-italic font-normal">Ekreates &amp; Kisira Emmanuel</span>
           </h2>
           <p className="text-sm text-[#88888C] max-w-2xl mx-auto font-sans leading-relaxed">
-            Videographer, Video Editor &amp; Creative Director pursuing Mechatronics Engineering, with 5+ years of hands-on experience directing, editing, and post-processing visual media.
+            Videographer, Video Editor &amp; Creative Director with a degree in Mechatronics Engineering, with 5+ years of hands-on experience directing, editing, and post-processing visual media.
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export const ResumeSection: React.FC = () => {
             </div>
 
             <p className="text-sm text-[#E2E2E2] leading-relaxed font-sans">
-              As a creative and technically inclined individual, I excel as a videographer and video editor with a strong passion for visual storytelling. Pursuing a degree in Mechatronics Engineering, I&apos;ve refined my problem-solving skills and technical knowledge. With 3+ years of experience at MC Ayo Studio and as Creative Director at Media Code, I&apos;ve honed my skills in video production, editing, and post-production using Adobe Premiere Pro and CapCut Pro. I&apos;m dedicated to delivering high-quality visual content that captivates audiences.
+              As a creative and technically inclined individual, I excel as a videographer and video editor with a strong passion for visual storytelling. Holding a degree in Mechatronics Engineering, I&apos;ve refined my problem-solving skills and technical knowledge. With 3+ years of experience at MC Ayo Studio and as Creative Director at Media Code, I&apos;ve honed my skills in video production, editing, and post-production using Adobe Premiere Pro and CapCut Pro. I&apos;m dedicated to delivering high-quality visual content that captivates audiences.
             </p>
 
             {/* Core Skills Chips */}
@@ -211,12 +211,12 @@ export const ResumeSection: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <h4 className="text-base font-medium text-white">Bachelor of Engineering (B.Eng.)</h4>
                   <span className="text-[10px] font-mono text-emerald-400 bg-[#0A0A0B] px-2 py-0.5 border border-[#1F1F23]">
-                    2021 – Till date
+                    2021 – 2026
                   </span>
                 </div>
                 <p className="text-xs font-mono text-[#88888C]">Federal University Oye Ekiti</p>
                 <p className="text-xs text-[#88888C] font-sans pt-1 leading-relaxed">
-                  Currently pursuing a Bachelor&apos;s degree in <strong>Mechatronics Engineering</strong> at Federal University Oye Ekiti. Combining technical engineering principles, control systems, and electronics with creative digital post-production.
+                  Completed Bachelor&apos;s degree in <strong>Mechatronics Engineering</strong> at Federal University Oye Ekiti. Combined technical engineering principles, control systems, and electronics with creative digital post-production.
                 </p>
               </div>
 

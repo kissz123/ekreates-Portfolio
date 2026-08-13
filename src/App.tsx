@@ -14,7 +14,6 @@ import { GearToolkit } from './components/GearToolkit';
 import { WorkflowSection } from './components/WorkflowSection';
 import { ResumeSection } from './components/ResumeSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
-import { VercelDeployModal } from './components/VercelDeployModal';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 
@@ -52,7 +51,6 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   
   // Modals
-  const [isVercelModalOpen, setIsVercelModalOpen] = useState(false);
   const [isAddWorkModalOpen, setIsAddWorkModalOpen] = useState(false);
 
   // Form pre-fill
@@ -127,7 +125,6 @@ export default function App() {
       {/* Header Navigation */}
       <Navbar
         onOpenShowreel={handleOpenShowreel}
-        onOpenVercelModal={() => setIsVercelModalOpen(true)}
         onOpenAddWorkModal={() => setIsAddWorkModalOpen(true)}
         onScrollToSection={scrollToSection}
       />
@@ -258,7 +255,6 @@ export default function App() {
 
       {/* Footer */}
       <Footer
-        onOpenVercelModal={() => setIsVercelModalOpen(true)}
         onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       />
 
@@ -267,12 +263,6 @@ export default function App() {
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
         onBookProjectWithData={handleBookProjectWithData}
-      />
-
-      {/* Vercel Deployment Guide Modal */}
-      <VercelDeployModal
-        isOpen={isVercelModalOpen}
-        onClose={() => setIsVercelModalOpen(false)}
       />
 
       {/* Add New Project Modal */}

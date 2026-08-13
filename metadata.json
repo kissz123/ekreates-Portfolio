@@ -1,6 +1,6 @@
 {
   "name": "Ekreates - Videography & Editing Portfolio",
-  "description": "Cinematic portfolio website for Ekreates featuring showreel player, filterable works, gear bag, and Vercel deployment guide.",
+  "description": "Cinematic portfolio website for Ekreates featuring showreel player, filterable works, gear bag, and interactive CV.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

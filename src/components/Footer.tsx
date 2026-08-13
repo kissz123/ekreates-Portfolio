@@ -1,13 +1,11 @@
 import React from 'react';
-import { Camera, ArrowUp, UploadCloud, Heart } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 interface FooterProps {
-  onOpenVercelModal: () => void;
   onScrollToTop: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  onOpenVercelModal,
   onScrollToTop,
 }) => {
   return (
@@ -31,15 +29,6 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* Vercel Deploy Helper Badge */}
-          <button
-            onClick={onOpenVercelModal}
-            className="flex items-center gap-2 px-3.5 py-2 bg-[#111114] hover:bg-[#1A1A1E] text-white border border-[#1F1F23] text-[10px] font-mono uppercase tracking-widest transition-all"
-          >
-            <UploadCloud className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Deploy to Vercel Guide</span>
-          </button>
-
           {/* Scroll to Top */}
           <button
             onClick={onScrollToTop}
@@ -58,10 +47,6 @@ export const Footer: React.FC<FooterProps> = ({
             <a href="#privacy" className="hover:text-[#88888C]">Privacy</a>
             <span>•</span>
             <a href="#terms" className="hover:text-[#88888C]">Terms</a>
-            <span>•</span>
-            <button onClick={onOpenVercelModal} className="text-emerald-400 hover:underline">
-              Vercel Guide
-            </button>
           </div>
         </div>
 

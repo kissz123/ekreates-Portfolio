@@ -1,0 +1,208 @@
+import React, { useState } from 'react';
+import { Play, UploadCloud, Menu, X, Camera, Plus } from 'lucide-react';
+
+interface NavbarProps {
+  onOpenShowreel: () => void;
+  onOpenVercelModal: () => void;
+  onOpenAddWorkModal: () => void;
+  onScrollToSection: (id: string) => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenShowreel,
+  onOpenVercelModal,
+  onOpenAddWorkModal,
+  onScrollToSection,
+}) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleNavClick = (id: string) => {
+    onScrollToSection(id);
+    setMobileMenuOpen(false);
+  };
+
+  return (
+    <header className="sticky top-0 z-40 bg-[#0A0A0B]/90 backdrop-blur-md border-b border-[#1F1F23] transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        {/* Brand Logo */}
+        <div 
+          onClick={() => handleNavClick('hero')} 
+          className="flex items-center gap-3 cursor-pointer group"
+        >
+          <div className="w-8 h-8 bg-white flex items-center justify-center rounded-sm transition-transform group-hover:scale-105">
+            <Camera className="w-4 h-4 text-black" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-lg sm:text-xl tracking-tighter text-white font-mono uppercase">
+                EKREATES
+              </span>
+              <span className="text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded-sm bg-[#111114] text-amber-400 border border-[#1F1F23] font-mono">
+                STUDIO
+              </span>
+            </div>
+            <p className="text-[11px] text-[#88888C] tracking-wide font-sans">
+              Videography &amp; Editing by Kisira Emmanuel
+            </p>
+          </div>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-8 text-xs font-medium tracking-[0.2em] uppercase text-[#88888C]">
+          <button 
+            onClick={() => handleNavClick('works')} 
+            className="hover:text-white transition-colors py-1"
+          >
+            Portfolio
+          </button>
+          <button 
+            onClick={() => handleNavClick('about')} 
+            className="hover:text-white transition-colors py-1"
+          >
+            About &amp; CV
+          </button>
+          <button 
+            onClick={() => handleNavClick('gear')} 
+            className="hover:text-white transition-colors py-1"
+          >
+            Gear
+          </button>
+          <button 
+            onClick={() => handleNavClick('process')} 
+            className="hover:text-white transition-colors py-1"
+          >
+            Workflow
+          </button>
+          <button 
+            onClick={() => handleNavClick('testimonials')} 
+            className="hover:text-white transition-colors py-1"
+          >
+            Clients
+          </button>
+        </nav>
+
+        {/* Action CTA Buttons */}
+        <div className="hidden sm:flex items-center gap-3">
+          {/* Add Work Button */}
+          <button
+            onClick={onOpenAddWorkModal}
+            className="flex items-center gap-1.5 px-3 py-2 border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-[11px] font-bold tracking-widest uppercase transition-all"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add Work</span>
+          </button>
+
+          {/* Showreel Button */}
+          <button
+            onClick={onOpenShowreel}
+            className="flex items-center gap-2 px-3.5 py-2 border border-[#1F1F23] bg-[#111114] hover:border-[#3A3A3F] text-white text-[11px] font-bold tracking-widest uppercase transition-all"
+          >
+            <Play className="w-3 h-3 text-white fill-white" />
+            <span>2026 Reel</span>
+          </button>
+
+          {/* Vercel Deploy Helper Button */}
+          <button
+            onClick={onOpenVercelModal}
+            className="flex items-center gap-2 px-3 py-2 border border-[#1F1F23] bg-[#111114] hover:border-emerald-500/50 text-[#88888C] hover:text-emerald-400 text-[11px] font-mono tracking-wider transition-all group"
+            title="How to deploy this website to Vercel"
+          >
+            <UploadCloud className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+            <span>Vercel Deploy</span>
+          </button>
+
+          {/* Direct Booking CTA */}
+          <button
+            onClick={() => handleNavClick('contact')}
+            className="px-5 py-2 border border-[#3A3A3F] bg-white text-black text-[10px] font-bold tracking-widest uppercase hover:bg-transparent hover:text-white transition-all shadow-sm"
+          >
+            Hire Director
+          </button>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden flex items-center gap-2">
+          <button
+            onClick={onOpenVercelModal}
+            className="p-2 bg-[#111114] border border-[#1F1F23] text-emerald-400"
+            title="Deploy to Vercel"
+          >
+            <UploadCloud className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 bg-[#111114] border border-[#1F1F23] text-[#E2E2E2] hover:text-white"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-[#0A0A0B] border-b border-[#1F1F23] px-4 py-6 space-y-4">
+          <div className="grid grid-cols-3 gap-2 pb-2">
+            <button
+              onClick={() => { onOpenAddWorkModal(); setMobileMenuOpen(false); }}
+              className="flex items-center justify-center gap-1.5 p-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-mono uppercase"
+            >
+              <Plus className="w-3.5 h-3.5" /> Add Work
+            </button>
+            <button
+              onClick={() => { onOpenShowreel(); setMobileMenuOpen(false); }}
+              className="flex items-center justify-center gap-1.5 p-2 bg-[#111114] border border-[#1F1F23] text-white text-[11px] font-mono uppercase"
+            >
+              <Play className="w-3 h-3 fill-white" /> Reel
+            </button>
+            <button
+              onClick={() => { onOpenVercelModal(); setMobileMenuOpen(false); }}
+              className="flex items-center justify-center gap-1.5 p-2 bg-[#111114] border border-[#1F1F23] text-emerald-400 text-[11px] font-mono uppercase"
+            >
+              <UploadCloud className="w-3.5 h-3.5" /> Deploy
+            </button>
+          </div>
+
+          <div className="space-y-1 pt-2 border-t border-[#1F1F23] text-xs font-medium tracking-widest uppercase text-[#88888C]">
+            <button 
+              onClick={() => handleNavClick('works')} 
+              className="block w-full text-left py-2.5 px-3 hover:bg-[#111114] hover:text-white"
+            >
+              Portfolio Works
+            </button>
+            <button 
+              onClick={() => handleNavClick('about')} 
+              className="block w-full text-left py-2.5 px-3 hover:bg-[#111114] hover:text-white"
+            >
+              About &amp; CV
+            </button>
+            <button 
+              onClick={() => handleNavClick('gear')} 
+              className="block w-full text-left py-2.5 px-3 hover:bg-[#111114] hover:text-white"
+            >
+              Gear Kit
+            </button>
+            <button 
+              onClick={() => handleNavClick('process')} 
+              className="block w-full text-left py-2.5 px-3 hover:bg-[#111114] hover:text-white"
+            >
+              Workflow
+            </button>
+            <button 
+              onClick={() => handleNavClick('testimonials')} 
+              className="block w-full text-left py-2.5 px-3 hover:bg-[#111114] hover:text-white"
+            >
+              Client Reviews
+            </button>
+            <button 
+              onClick={() => handleNavClick('contact')} 
+              className="block w-full text-center py-2.5 px-3 bg-white text-black font-bold uppercase mt-2 tracking-widest"
+            >
+              Hire Director
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};

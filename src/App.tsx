@@ -21,26 +21,45 @@ import { PROJECTS_DATA } from './data/projectsData';
 import { Project, ProjectNiche } from './types';
 import { Film, Plus, RotateCcw, ArrowLeft } from 'lucide-react';
 
-const STORAGE_KEY = 'ekreates_portfolio_projects_v5';
+const STORAGE_KEY = 'ekreates_portfolio_projects_v8';
 
 export default function App() {
   const [projectsList, setProjectsList] = useState<Project[]>(() => {
     try {
-      // Clear legacy storage key if present
-      localStorage.removeItem('ekreates_portfolio_projects');
+      // Clear legacy storage keys if present
+      [
+        'ekreates_portfolio_projects',
+        'ekreates_portfolio_projects_v2',
+        'ekreates_portfolio_projects_v3',
+        'ekreates_portfolio_projects_v4',
+        'ekreates_portfolio_projects_v5',
+        'ekreates_portfolio_projects_v6',
+        'ekreates_portfolio_projects_v7',
+      ].forEach((key) => {
+        try {
+          localStorage.removeItem(key);
+        } catch (_) {}
+      });
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Filter out deleted Reel 08 or stale items
+          // Filter out deleted Reel 08, old thriller video with Google Drive link, or stale items
           const sanitized = parsed.filter(
-            (p: Project) => p.id !== 'reel_8' && !p.videoUrl?.includes('QSHohrusMHg')
+            (p: Project) =>
+              p.id !== 'reel_8' &&
+              p.id !== 'drama_thriller_1' &&
+              !p.videoUrl?.includes('QSHohrusMHg') &&
+              !p.videoUrl?.includes('12SrQ96SGp_Jew6YRq793xr0e7fcXtRBp')
           );
           // Merge any newly added default projects from PROJECTS_DATA that might be missing
           const existingIds = new Set(sanitized.map((p: Project) => p.id));
-          const missingDefaults = PROJECTS_DATA.filter((p) => !existingIds.has(p.id) && p.id !== 'reel_8');
+          const missingDefaults = PROJECTS_DATA.filter(
+            (p) => !existingIds.has(p.id) && p.id !== 'reel_8' && p.id !== 'drama_thriller_1'
+          );
           if (missingDefaults.length > 0) {
-            return [...missingDefaults, ...sanitized];
+            return [...sanitized, ...missingDefaults];
           }
           return sanitized;
         }
@@ -48,7 +67,7 @@ export default function App() {
     } catch (e) {
       console.error('Failed to load saved projects', e);
     }
-    return PROJECTS_DATA.filter((p) => p.id !== 'reel_8');
+    return PROJECTS_DATA.filter((p) => p.id !== 'reel_8' && p.id !== 'drama_thriller_1');
   });
 
   const [selectedNiche, setSelectedNiche] = useState<ProjectNiche | 'all'>('all');
@@ -72,14 +91,15 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const projectId = params.get('project');
     if (projectId) {
+      const targetId = projectId === 'drama_thriller_1' ? 'live_drama_thriller' : projectId;
       const found = projectsList.find(
-        (p) => p.id === projectId || p.title.toLowerCase() === projectId.toLowerCase()
+        (p) => p.id === targetId || p.title.toLowerCase() === targetId.toLowerCase()
       );
       if (found) {
         setSelectedProject(found);
       }
     }
-  }, []);
+  }, [projectsList]);
 
   useEffect(() => {
     const url = new URL(window.location.href);

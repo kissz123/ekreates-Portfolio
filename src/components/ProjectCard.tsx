@@ -84,11 +84,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             <h3 className="text-base font-medium text-white group-hover:underline transition-all line-clamp-1">
               {project.title}
             </h3>
-            {project.viewsCount && (
-              <p className="text-[11px] font-mono text-emerald-400">
-                {project.viewsCount} VIEWS
-              </p>
-            )}
           </div>
         </div>
 
@@ -96,7 +91,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         <div className="p-3 bg-[#0A0A0B] border-t border-[#1F1F23] flex items-center justify-between text-[11px] text-[#88888C] font-mono">
           <span className="truncate">{project.role.join(' • ')}</span>
           <span className="text-white hover:underline shrink-0 pl-2 uppercase font-bold text-[10px]">
-            VIEW →
+            WATCH →
           </span>
         </div>
       </div>
@@ -242,11 +237,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             <span className="truncate max-w-[180px]">{project.cameraUsed}</span>
           </div>
 
-          {project.viewsCount && (
-            <span className="text-emerald-400 text-[10px] uppercase font-mono">
-              {project.viewsCount}
-            </span>
-          )}
+          <span className="text-[#88888C] text-[10px] font-mono">
+            {project.duration}
+          </span>
         </div>
       </div>
     </div>

@@ -309,8 +309,8 @@ export const HeroShowreel: React.FC<HeroShowreelProps> = ({
           </div>
 
           <div className="p-6 bg-[#111114] border border-[#1F1F23] text-center space-y-1">
-            <p className="text-3xl font-light text-white font-mono">25M+</p>
-            <p className="text-[10px] uppercase tracking-widest text-[#88888C]">Aggregate Views</p>
+            <p className="text-3xl font-light text-white font-mono">100%</p>
+            <p className="text-[10px] uppercase tracking-widest text-[#88888C]">Authentic Craft</p>
           </div>
 
           <div className="p-6 bg-[#111114] border border-[#1F1F23] text-center space-y-1">

@@ -424,13 +424,6 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
                       <span className="text-[#88888C] font-mono text-[11px]">{project.colorProfile}</span>
                     </div>
                   )}
-
-                  {project.viewsCount && (
-                    <div className="pt-2 border-t border-[#1F1F23]">
-                      <span className="text-[#88888C] block font-mono text-[10px]">STATS</span>
-                      <span className="text-emerald-400 font-bold text-sm">{project.viewsCount}</span>
-                    </div>
-                  )}
                 </div>
 
                 <button

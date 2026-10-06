@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Play, Menu, X, Camera, Plus } from 'lucide-react';
+import { Play, Menu, X, Camera } from 'lucide-react';
 
 interface NavbarProps {
   onOpenShowreel: () => void;
-  onOpenAddWorkModal: () => void;
   onScrollToSection: (id: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenShowreel,
-  onOpenAddWorkModal,
   onScrollToSection,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -61,12 +59,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             About &amp; CV
           </button>
           <button 
-            onClick={() => handleNavClick('gear')} 
-            className="hover:text-white transition-colors py-1"
-          >
-            Gear
-          </button>
-          <button 
             onClick={() => handleNavClick('process')} 
             className="hover:text-white transition-colors py-1"
           >
@@ -82,15 +74,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Action CTA Buttons */}
         <div className="hidden sm:flex items-center gap-3">
-          {/* Add Work Button */}
-          <button
-            onClick={onOpenAddWorkModal}
-            className="flex items-center gap-1.5 px-3 py-2 border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-[11px] font-bold tracking-widest uppercase transition-all"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Work</span>
-          </button>
-
           {/* Showreel Button */}
           <button
             onClick={onOpenShowreel}
@@ -123,18 +106,12 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-[#0A0A0B] border-b border-[#1F1F23] px-4 py-6 space-y-4">
-          <div className="grid grid-cols-2 gap-2 pb-2">
-            <button
-              onClick={() => { onOpenAddWorkModal(); setMobileMenuOpen(false); }}
-              className="flex items-center justify-center gap-1.5 p-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-mono uppercase"
-            >
-              <Plus className="w-3.5 h-3.5" /> Add Work
-            </button>
+          <div className="pb-2">
             <button
               onClick={() => { onOpenShowreel(); setMobileMenuOpen(false); }}
-              className="flex items-center justify-center gap-1.5 p-2 bg-[#111114] border border-[#1F1F23] text-white text-[11px] font-mono uppercase"
+              className="w-full flex items-center justify-center gap-2 p-2.5 bg-[#111114] border border-[#1F1F23] text-white text-[11px] font-mono uppercase tracking-widest hover:border-[#3A3A3F]"
             >
-              <Play className="w-3 h-3 fill-white" /> Reel
+              <Play className="w-3 h-3 fill-white" /> Watch 2026 Reel
             </button>
           </div>
 
@@ -150,12 +127,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="block w-full text-left py-2.5 px-3 hover:bg-[#111114] hover:text-white"
             >
               About &amp; CV
-            </button>
-            <button 
-              onClick={() => handleNavClick('gear')} 
-              className="block w-full text-left py-2.5 px-3 hover:bg-[#111114] hover:text-white"
-            >
-              Gear Kit
             </button>
             <button 
               onClick={() => handleNavClick('process')} 

@@ -9,8 +9,6 @@ import { HeroShowreel } from './components/HeroShowreel';
 import { NicheFilter } from './components/NicheFilter';
 import { ProjectCard } from './components/ProjectCard';
 import { ProjectModal } from './components/ProjectModal';
-import { AddProjectModal } from './components/AddProjectModal';
-import { GearToolkit } from './components/GearToolkit';
 import { WorkflowSection } from './components/WorkflowSection';
 import { ResumeSection } from './components/ResumeSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
@@ -19,9 +17,9 @@ import { Footer } from './components/Footer';
 
 import { PROJECTS_DATA } from './data/projectsData';
 import { Project, ProjectNiche } from './types';
-import { Film, Plus, RotateCcw, ArrowLeft } from 'lucide-react';
+import { Film, ArrowLeft } from 'lucide-react';
 
-const STORAGE_KEY = 'ekreates_portfolio_projects_v8';
+const STORAGE_KEY = 'ekreates_portfolio_projects_v11';
 
 export default function App() {
   const [projectsList, setProjectsList] = useState<Project[]>(() => {
@@ -35,6 +33,9 @@ export default function App() {
         'ekreates_portfolio_projects_v5',
         'ekreates_portfolio_projects_v6',
         'ekreates_portfolio_projects_v7',
+        'ekreates_portfolio_projects_v8',
+        'ekreates_portfolio_projects_v9',
+        'ekreates_portfolio_projects_v10',
       ].forEach((key) => {
         try {
           localStorage.removeItem(key);
@@ -45,18 +46,31 @@ export default function App() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Filter out deleted Reel 08, old thriller video with Google Drive link, or stale items
+          // Filter out deleted Reel 08, old thriller video, or removed projects
           const sanitized = parsed.filter(
             (p: Project) =>
               p.id !== 'reel_8' &&
               p.id !== 'drama_thriller_1' &&
+              p.id !== 'work_linkedin_1' &&
+              p.id !== 'work_linkedin_2' &&
+              p.id !== 'work_linkedin_3' &&
+              p.id !== 'p1' &&
+              p.id !== 'p2' &&
               !p.videoUrl?.includes('QSHohrusMHg') &&
               !p.videoUrl?.includes('12SrQ96SGp_Jew6YRq793xr0e7fcXtRBp')
           );
           // Merge any newly added default projects from PROJECTS_DATA that might be missing
           const existingIds = new Set(sanitized.map((p: Project) => p.id));
           const missingDefaults = PROJECTS_DATA.filter(
-            (p) => !existingIds.has(p.id) && p.id !== 'reel_8' && p.id !== 'drama_thriller_1'
+            (p) =>
+              !existingIds.has(p.id) &&
+              p.id !== 'reel_8' &&
+              p.id !== 'drama_thriller_1' &&
+              p.id !== 'work_linkedin_1' &&
+              p.id !== 'work_linkedin_2' &&
+              p.id !== 'work_linkedin_3' &&
+              p.id !== 'p1' &&
+              p.id !== 'p2'
           );
           if (missingDefaults.length > 0) {
             return [...sanitized, ...missingDefaults];
@@ -67,7 +81,16 @@ export default function App() {
     } catch (e) {
       console.error('Failed to load saved projects', e);
     }
-    return PROJECTS_DATA.filter((p) => p.id !== 'reel_8' && p.id !== 'drama_thriller_1');
+    return PROJECTS_DATA.filter(
+      (p) =>
+        p.id !== 'reel_8' &&
+        p.id !== 'drama_thriller_1' &&
+        p.id !== 'work_linkedin_1' &&
+        p.id !== 'work_linkedin_2' &&
+        p.id !== 'work_linkedin_3' &&
+        p.id !== 'p1' &&
+        p.id !== 'p2'
+    );
   });
 
   const [selectedNiche, setSelectedNiche] = useState<ProjectNiche | 'all'>('all');
@@ -75,9 +98,6 @@ export default function App() {
   const [layoutMode, setLayoutMode] = useState<'grid' | 'reels' | 'list'>('grid');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   
-  // Modals
-  const [isAddWorkModalOpen, setIsAddWorkModalOpen] = useState(false);
-
   // Form pre-fill
   const [contactEstimateText, setContactEstimateText] = useState('');
   const [contactBudgetRange, setContactBudgetRange] = useState('');
@@ -91,6 +111,18 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const projectId = params.get('project');
     if (projectId) {
+      if (
+        projectId === 'work_linkedin_1' ||
+        projectId === 'work_linkedin_2' ||
+        projectId === 'work_linkedin_3' ||
+        projectId === 'p1' ||
+        projectId === 'p2'
+      ) {
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete('project');
+        window.history.replaceState(null, '', cleanUrl.toString());
+        return;
+      }
       const targetId = projectId === 'drama_thriller_1' ? 'live_drama_thriller' : projectId;
       const found = projectsList.find(
         (p) => p.id === targetId || p.title.toLowerCase() === targetId.toLowerCase()
@@ -123,21 +155,17 @@ export default function App() {
   // Track scrolling to toggle floating back button visibility
   useEffect(() => {
     const handleScroll = () => {
-      setShowBackButton(window.scrollY > 250 || sectionHistory.length > 1 || selectedProject !== null || isAddWorkModalOpen);
+      setShowBackButton(window.scrollY > 250 || sectionHistory.length > 1 || selectedProject !== null);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [sectionHistory, selectedProject, isAddWorkModalOpen]);
+  }, [sectionHistory, selectedProject]);
 
   // Back action: Closes open modal or scrolls back to previous section / top
   const handleGoBack = () => {
     if (selectedProject) {
       setSelectedProject(null);
-      return;
-    }
-    if (isAddWorkModalOpen) {
-      setIsAddWorkModalOpen(false);
       return;
     }
     if (sectionHistory.length > 1) {
@@ -161,38 +189,25 @@ export default function App() {
     const handlePopState = () => {
       if (selectedProject) {
         setSelectedProject(null);
-      } else if (isAddWorkModalOpen) {
-        setIsAddWorkModalOpen(false);
       } else if (sectionHistory.length > 1) {
         handleGoBack();
       }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [selectedProject, isAddWorkModalOpen, sectionHistory]);
+  }, [selectedProject, sectionHistory]);
 
   // Push browser history state when opening modals
   useEffect(() => {
-    if (selectedProject || isAddWorkModalOpen) {
+    if (selectedProject) {
       window.history.pushState({ modalOpen: true }, '');
     }
-  }, [selectedProject, isAddWorkModalOpen]);
-
-  const handleAddProject = (newProject: Project) => {
-    setProjectsList((prev) => [newProject, ...prev]);
-  };
+  }, [selectedProject]);
 
   const handleDeleteProject = (projectId: string) => {
     setProjectsList((prev) => prev.filter((p) => p.id !== projectId));
     if (selectedProject?.id === projectId) {
       setSelectedProject(null);
-    }
-  };
-
-  const handleResetProjects = () => {
-    if (window.confirm('Reset portfolio back to default sample works?')) {
-      setProjectsList(PROJECTS_DATA);
-      localStorage.removeItem(STORAGE_KEY);
     }
   };
 
@@ -250,7 +265,6 @@ export default function App() {
       {/* Header Navigation */}
       <Navbar
         onOpenShowreel={handleOpenShowreel}
-        onOpenAddWorkModal={() => setIsAddWorkModalOpen(true)}
         onScrollToSection={scrollToSection}
       />
 
@@ -276,27 +290,6 @@ export default function App() {
             <p className="text-sm sm:text-base text-slate-300">
               Filter through high-impact commercials, music videos, documentaries, vertical reels, corporate brand stories, and motion graphics post.
             </p>
-
-            {/* Quick Add Work CTA */}
-            <div className="pt-2 flex items-center justify-center gap-3">
-              <button
-                onClick={() => setIsAddWorkModalOpen(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold uppercase tracking-wider transition-all shadow-md shadow-amber-500/10"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Add Your Work</span>
-              </button>
-              {projectsList.length !== PROJECTS_DATA.length && (
-                <button
-                  onClick={handleResetProjects}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white text-xs font-mono transition-colors"
-                  title="Reset portfolio list to default sample projects"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset Default</span>
-                </button>
-              )}
-            </div>
           </div>
 
           {/* Filter Bar */}
@@ -366,9 +359,6 @@ export default function App() {
       {/* About & Resume Section */}
       <ResumeSection />
 
-      {/* Gear & Software Toolkit */}
-      <GearToolkit />
-
       {/* Production Process Workflow */}
       <WorkflowSection />
 
@@ -392,13 +382,6 @@ export default function App() {
         onClose={() => setSelectedProject(null)}
         onBookProjectWithData={handleBookProjectWithData}
         onDeleteProject={handleDeleteProject}
-      />
-
-      {/* Add New Project Modal */}
-      <AddProjectModal
-        isOpen={isAddWorkModalOpen}
-        onClose={() => setIsAddWorkModalOpen(false)}
-        onAddProject={handleAddProject}
       />
 
       {/* Floating Back to Previous Page Button */}
